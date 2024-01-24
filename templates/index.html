@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Rasmus Jessen Aaskov">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Due diligence - Dora</title>
+    <link rel="canonical" href="css/starter-template/">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/bootstrap.min.css') }}">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/starter-template.css') }}">
+  </head>
+  <body>
+    
+    <div class="col-lg-8 mx-auto p-3 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+        <span class="fs-4">DORA due diligence examination</span>
+        </a>
+    </header>
+
+    <main>
+        <h1>Initiate a new DORA due diligence check</h1>
+        <p class="fs-5 col-md-8">Use the browsing function below to upload a new PDF document and initiate a new examination process using Azure OpenAI services.</p>
+
+        <form action = "/success" method = "post" enctype="multipart/form-data"> 
+          <input type="file" class="form-control" id="customFile" name="file" />
+          <p><!-- --></p>
+          <input type = "submit" class="btn btn-primary px-4" value="Upload"> 
+        </form> 
+
+    </main>
+
+
+    </div>
+
+    <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
+      
+  </body>
+</html>
