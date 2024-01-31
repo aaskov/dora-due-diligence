@@ -2,6 +2,8 @@ from distutils.log import debug
 from fileinput import filename 
 from flask import *
 from PyPDF2 import PdfReader
+
+
 app = Flask(__name__) 
 
 @app.route('/') 
@@ -26,4 +28,4 @@ def success():
 		return render_template("acknowledgement.html", name = f.filename, text = text) 
 
 if __name__ == '__main__': 
-	app.run(debug=True)
+	app.run(debug=True, host="0.0.0.0", port=8080)
