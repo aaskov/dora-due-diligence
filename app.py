@@ -46,7 +46,7 @@ def success():
 	    messages=[
 	        {
 	            "role": "user",
-	            "content": "Does any part of the followin content fullfill the requirements mentioned in paragraph 2(a). You are only allowed to answer with yes or no.",
+	            "content": "Does any part of the followin content fullfill the requirements mentioned in paragraph 2(a). You are only allowed to answer with yes or no: "+text,
 	        },
 	    ],
 		    extra_body={
