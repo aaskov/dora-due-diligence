@@ -41,15 +41,15 @@ def success():
         answer2d = SendAndReturnAnswer("2(d)", contract)
         
         # Extract specific tags
-        found2b = re.findall(r'<FOUND>(.*?)</FOUND>', answer2b)[0]
-        found2c = re.findall(r'<FOUND>(.*?)</FOUND>', answer2c)[0]
-        found2d = re.findall(r'<FOUND>(.*?)</FOUND>', answer2d)[0]
-        clause2b = re.findall(r'<CLAUSE>(.*?)</CLAUSE>', answer2b)[0]
-        clause2c = re.findall(r'<CLAUSE>(.*?)</CLAUSE>', answer2c)[0]
-        clause2d = re.findall(r'<CLAUSE>(.*?)</CLAUSE>', answer2d)[0]
-        explanation2b = re.findall(r'<EXPLANATION>(.*?)</EXPLANATION>', answer2b)[0]
-        explanation2c = re.findall(r'<EXPLANATION>(.*?)</EXPLANATION>', answer2c)[0]
-        explanation2d = re.findall(r'<EXPLANATION>(.*?)</EXPLANATION>', answer2d)[0]
+        found2b = re.findall(r'<FOUND>(.*?)</FOUND>', answer2b)
+        found2c = re.findall(r'<FOUND>(.*?)</FOUND>', answer2c)
+        found2d = re.findall(r'<FOUND>(.*?)</FOUND>', answer2d)
+        clause2b = re.findall(r'<CLAUSE>(.*?)</CLAUSE>', answer2b)
+        clause2c = re.findall(r'<CLAUSE>(.*?)</CLAUSE>', answer2c)
+        clause2d = re.findall(r'<CLAUSE>(.*?)</CLAUSE>', answer2d)
+        explanation2b = re.findall(r'<EXPLANATION>(.*?)</EXPLANATION>', answer2b)
+        explanation2c = re.findall(r'<EXPLANATION>(.*?)</EXPLANATION>', answer2c)
+        explanation2d = re.findall(r'<EXPLANATION>(.*?)</EXPLANATION>', answer2d)
         
         # Handle empty scenarios
         if not found2b: found2b = 'Not found'
