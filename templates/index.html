@@ -6,10 +6,9 @@
     <meta name="description" content="">
     <meta name="author" content="Rasmus Jessen Aaskov">
     <meta name="generator" content="Hugo 0.84.0">
-    <title>Due diligence - Dora</title>
+    <title>DORA compliance</title>
     <link rel="canonical" href="css/starter-template/">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/bootstrap.min.css') }}">
-
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -24,34 +23,28 @@
         }
       }
     </style>
-
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/starter-template.css') }}">
   </head>
   <body>
-    
     <div class="col-lg-8 mx-auto p-3 py-md-5">
-    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
-        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
-        <span class="fs-4">DORA due diligence examination</span>
-        </a>
-    </header>
-
-    <main>
-        <h1>Initiate a new DORA due diligence check</h1>
-        <p class="fs-5 col-md-8">Use the browsing function below to upload a new PDF document and initiate a new examination process using Azure OpenAI services.</p>
-
-        <form action = "/success" method = "post" enctype="multipart/form-data"> 
-          <input type="file" class="form-control" id="customFile" name="file" />
-          <p><!-- --></p>
-          <input type = "submit" class="btn btn-primary px-4" value="Upload"> 
-        </form> 
-
-    </main>
-
-
+      <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+          <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+          <span class="fs-4">DORA compliance assessment tool</span>
+          </a>
+      </header>
+      <main>
+          <p class="lead">Initiate the assessment tool by browsing for a new PDF-file and upload it for contract analysis. The PDF-file is stored in Azure Storage and analyzed using Azure OpenAI services.</p>
+          <form action = "/success" method = "post" enctype="multipart/form-data"> 
+            <input type="file" class="form-control" id="customFile" accept="application/pdf" name="file" />
+            <p><!-- --></p>
+            <input id="theButton1" type = "submit" class="btn btn-primary px-4" value="Assess contract"> 
+            <button id="theButton2" class="btn btn-primary" type="button" style="display:none;" disabled><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>  Analyzing...</button>
+          </form>
+      </main>
     </div>
-
     <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
-      
+    <script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>
+    <script>$("#theButton1").click(function(){$("#theButton1").hide();$("#theButton2").show();})</script>
+    <script>$( document ).ready(function() {$("#theButton1").show();$("#theButton2").hide();});</script>
   </body>
 </html>

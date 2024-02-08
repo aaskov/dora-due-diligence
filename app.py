@@ -1,74 +1,73 @@
-from distutils.log import debug 
-from fileinput import filename 
-from flask import *
-from PyPDF2 import PdfReader
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import os
-import openai
-import json
+import re
+from flask import *
+from fileinput import filename 
+from distutils.log import debug 
+from pdf import ReadAndCleanPdfFile
+from chat import SendAndReturnAnswer
 
-endpoint = os.environ.get("AZURE_OPENAI_ENDPOINT")
-api_key = os.environ.get("AZURE_OPENAI_API_KEY")
-deployment = "demo-dora-due-diligence4"
 
-client = openai.AzureOpenAI(
-    base_url=f"{endpoint}/openai/deployments/{deployment}/extensions",
-    api_key=api_key,
-    api_version="2023-08-01-preview",
-)
-
+# ==============================================================================
+# FLASK APP CONFIGURATION
+# ------------------------------------------------------------------------------
 
 app = Flask(__name__) 
 
+
+# Define the '/' endpoint
 @app.route('/') 
 def main(): 
-	return render_template("index.html") 
+    return render_template("index.html") 
 
+
+# Define the '/success' endpoint (when documents have been processed)
 @app.route('/success', methods = ['POST']) 
 def success(): 
-	if request.method == 'POST': 
-		# Save file 
-		print('Saving file locally')
-		f = request.files['file'] 
-		f.save(f.filename) 
+    if request.method == 'POST': 
+        
+        # Save the file locally (in order to read it)
+        print('Saving file locally')
+        f = request.files['file'] 
+        f.save(f.filename) 
 
-		# Read file (assuming PDF)
-		print('Reading text from file')
-		reader = PdfReader(f.filename)
-		text = ""
-		for i in range(len(reader.pages)):
-			text += reader.pages[i].extract_text()
+        # Read file (assuming PDF)
+        contract = ReadAndCleanPdfFile(f.filename)
+        
+        # Ask Azure OpenAI
+        answer2b = SendAndReturnAnswer("2(b)", contract)
+        answer2c = SendAndReturnAnswer("2(c)", contract)
+        answer2d = SendAndReturnAnswer("2(d)", contract)
+        
+        # Extract specific tags
+        found2b = re.findall(r'<FOUND>(.*?)</FOUND>', answer2b)[0]
+        found2c = re.findall(r'<FOUND>(.*?)</FOUND>', answer2c)[0]
+        found2d = re.findall(r'<FOUND>(.*?)</FOUND>', answer2d)[0]
+        clause2b = re.findall(r'<CLAUSE>(.*?)</CLAUSE>', answer2b)[0]
+        clause2c = re.findall(r'<CLAUSE>(.*?)</CLAUSE>', answer2c)[0]
+        clause2d = re.findall(r'<CLAUSE>(.*?)</CLAUSE>', answer2d)[0]
+        explanation2b = re.findall(r'<EXPLANATION>(.*?)</EXPLANATION>', answer2b)[0]
+        explanation2c = re.findall(r'<EXPLANATION>(.*?)</EXPLANATION>', answer2c)[0]
+        explanation2d = re.findall(r'<EXPLANATION>(.*?)</EXPLANATION>', answer2d)[0]
+        
+        # Handle empty scenarios
+        if not found2b: found2b = 'Not found'
+        if not found2c: found2c = 'Not found'
+        if not found2d: found2d = 'Not found'
+        if not clause2b: clause2b = 'No clause'
+        if not clause2c: clause2c = 'No clause'
+        if not clause2d: clause2d = 'No clause'
+        if not explanation2b: explanation2b = 'No explanation'
+        if not explanation2c: explanation2c = 'No explanation'
+        if not explanation2d: explanation2d = 'No explanation'
+        
 
-		# =======
-		# Azure OpenAI service
-		# -------
-		completion = client.chat.completions.create(
-	    model=deployment,
-	    messages=[
-	        {
-	            "role": "user",
-	            "content": "Does any part of the followin content fullfill the requirements mentioned in paragraph 2(a). You are only allowed to answer with yes or no: "+text,
-	        },
-	    ],
-		    extra_body={
-		        "dataSources": [
-		            {
-		                "type": "AzureCognitiveSearch",
-		                "parameters": {
-		                    "endpoint": os.environ.get("AZURE_SEARCH_ENDPOINT"),
-		                    "key": os.environ.get("AZURE_SEARCH_API_KEY"),
-		                    "indexName": "indexdoraarticle30"
-		                }
-		            }
-		        ]
-		    }
-		)
-
-		output = json.loads(completion.model_dump_json())
-
-		ss302a = output["choices"][0]["message"]["content"]
+        return render_template("acknowledgement.html", filename=f.filename, found2b=found2b, clause2b=clause2b, explanation2b=explanation2b, found2c=found2c, clause2c=clause2c, explanation2c=explanation2c, found2d=found2d, clause2d=clause2d, explanation2d=explanation2d)
 
 
-		return render_template("acknowledgement.html", name = f.filename, text = text, ss302a=ss302a) 
-
+# ==============================================================================
+# RUN
+# ------------------------------------------------------------------------------
 if __name__ == '__main__': 
-	app.run(debug=True)
+    app.run(debug=True)
